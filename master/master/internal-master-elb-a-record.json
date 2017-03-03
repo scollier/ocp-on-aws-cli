@@ -4,12 +4,12 @@
     {
       "Action": "CREATE",
       "ResourceRecordSet": {
-        "Name": "ci-internal-master-elb.ci.sysdeseng.com",
+        "Name": "scollier-internal-openshift-master.scollier-aws.sysdeseng.com",
         "Type": "CNAME",
         "TTL": 60,
         "ResourceRecords": [
           {
-            "Value": "internal-ci-ose-internal-master-1114788177.us-east-1.elb.amazonaws.com"
+            "Value": "internal-scollier-ose-internal-master-151215421.us-east-1.elb.amazonaws.com"
           }
         ]
       }

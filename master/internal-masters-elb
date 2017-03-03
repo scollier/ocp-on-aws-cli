@@ -12,20 +12,6 @@ while [ -z "$SUBNET_ID_1" ]; do
     --output text)
 done
 
-while [ -z "$SUBNET_ID_2" ]; do
-    SUBNET_ID_2=$(aws ec2 describe-subnets \
-    --query Subnets[].SubnetId[] \
-    --filters Name=cidr,Values=$SUBNET_CIDR_2 \
-    --output text)
-done
-
-while [ -z "$SUBNET_ID_3" ]; do
-    SUBNET_ID_3=$(aws ec2 describe-subnets \
-    --query Subnets[].SubnetId[] \
-    --filters Name=cidr,Values=$SUBNET_CIDR_3 \
-    --output text)
-done
-
 # Get instances to add to load balancer
 while [ -z "$INSTANCE_ID_1" ]; do
     INSTANCE_ID_1=$(aws ec2 describe-instances \
@@ -34,26 +20,12 @@ while [ -z "$INSTANCE_ID_1" ]; do
     --output text)
 done
 
-while [ -z "$INSTANCE_ID_2" ]; do
-    INSTANCE_ID_2=$(aws ec2 describe-instances \
-    --query 'Reservations[].Instances[].[InstanceId]' \
-    --filters "Name=instance-state-name,Values=running" "Name=tag:Name,Values=${UNIQ_VAR}-master01.*" \
-    --output text)
-done
-
-while [ -z "$INSTANCE_ID_3" ]; do
-    INSTANCE_ID_3=$(aws ec2 describe-instances \
-    --query 'Reservations[].Instances[].[InstanceId]' \
-    --filters "Name=instance-state-name,Values=running" "Name=tag:Name,Values=${UNIQ_VAR}-master02.*" \
-    --output text)
-done
-
 # Create load balancer for masters
 aws elb create-load-balancer \
 --load-balancer-name $INTERNAL_MASTER_LB_NAME \
 --listeners "Protocol=TCP,LoadBalancerPort=8443,InstancePort=8443" \
 --scheme internal \
---subnets "$SUBNET_ID_1" "$SUBNET_ID_2" "$SUBNET_ID_3"
+--subnets "$SUBNET_ID_1"
 
 # Add load balancer to security group
 while [ -z "$INTERNAL_MASTER_ELB_SEC_GRP_ID" ]; do
@@ -75,7 +47,7 @@ aws elb configure-health-check \
 # add nodes to load balancer
 aws elb register-instances-with-load-balancer \
 --load-balancer-name $INTERNAL_MASTER_LB_NAME \
---instances $INSTANCE_ID_1 $INSTANCE_ID_2 $INSTANCE_ID_3
+--instances $INSTANCE_ID_1 
 
 # Enable cross AZ Load Balancing
 aws elb modify-load-balancer-attributes --load-balancer-name \

@@ -44,19 +44,19 @@ while [ -z "$SUBNET_ID_1" ]; do
     --output text)
 done
 
-while [ -z "$SUBNET_ID_2" ]; do
-    SUBNET_ID_2=$(aws ec2 describe-subnets \
-    --query Subnets[].SubnetId[] \
-    --filters Name=cidr,Values=$SUBNET_CIDR_2 \
-    --output text)
-done
-
-while [ -z "$SUBNET_ID_3" ]; do
-    SUBNET_ID_3=$(aws ec2 describe-subnets \
-    --query Subnets[].SubnetId[] \
-    --filters Name=cidr,Values=$SUBNET_CIDR_3 \
-    --output text)
-done
+#while [ -z "$SUBNET_ID_2" ]; do
+#    SUBNET_ID_2=$(aws ec2 describe-subnets \
+#    --query Subnets[].SubnetId[] \
+#    --filters Name=cidr,Values=$SUBNET_CIDR_2 \
+#    --output text)
+#done
+#
+#while [ -z "$SUBNET_ID_3" ]; do
+#    SUBNET_ID_3=$(aws ec2 describe-subnets \
+#    --query Subnets[].SubnetId[] \
+#    --filters Name=cidr,Values=$SUBNET_CIDR_3 \
+#    --output text)
+#done
 
 # Deploy the instances and assign the tags
 aws ec2 create-tags \
@@ -69,22 +69,22 @@ aws ec2 create-tags \
 --key-name $KEY_NAME --iam-instance-profile Name=$INSTANCE_PROFILE | jq -r ".Instances[0].InstanceId"` \
 --tags "Key=Name,Value=$MASTER0" "Key=${KEY_TAG},Value=$MASTER_NODE_TAGS"
 
-aws ec2 create-tags \
---resources `aws ec2 run-instances \
---image-id $AMI_ID \
---instance-type $MASTER_INST_TYPE \
---subnet-id $SUBNET_ID_2 \
---security-group-ids $SEC_GROUP_ID \
---block-device-mappings file://master/master-ebs-config.json \
---key-name $KEY_NAME --iam-instance-profile Name=$INSTANCE_PROFILE | jq -r ".Instances[0].InstanceId"` \
---tags "Key=Name,Value=$MASTER1" "Key=${KEY_TAG},Value=$MASTER_NODE_TAGS"
+# aws ec2 create-tags \
+# --resources `aws ec2 run-instances \
+# --image-id $AMI_ID \
+# --instance-type $MASTER_INST_TYPE \
+# --subnet-id $SUBNET_ID_2 \
+# --security-group-ids $SEC_GROUP_ID \
+# --block-device-mappings file://master/master-ebs-config.json \
+# --key-name $KEY_NAME --iam-instance-profile Name=$INSTANCE_PROFILE | jq -r ".Instances[0].InstanceId"` \
+# --tags "Key=Name,Value=$MASTER1" "Key=${KEY_TAG},Value=$MASTER_NODE_TAGS"
 
-aws ec2 create-tags \
---resources `aws ec2 run-instances \
---image-id $AMI_ID \
---instance-type $MASTER_INST_TYPE \
---subnet-id $SUBNET_ID_3 \
---security-group-ids $SEC_GROUP_ID \
---block-device-mappings file://master/master-ebs-config.json \
---key-name $KEY_NAME --iam-instance-profile Name=$INSTANCE_PROFILE | jq -r ".Instances[0].InstanceId"` \
---tags "Key=Name,Value=$MASTER2" "Key=${KEY_TAG},Value=$MASTER_NODE_TAGS"
+#aws ec2 create-tags \
+#--resources `aws ec2 run-instances \
+#--image-id $AMI_ID \
+#--instance-type $MASTER_INST_TYPE \
+#--subnet-id $SUBNET_ID_3 \
+#--security-group-ids $SEC_GROUP_ID \
+#--block-device-mappings file://master/master-ebs-config.json \
+#--key-name $KEY_NAME --iam-instance-profile Name=$INSTANCE_PROFILE | jq -r ".Instances[0].InstanceId"` \
+#--tags "Key=Name,Value=$MASTER2" "Key=${KEY_TAG},Value=$MASTER_NODE_TAGS"

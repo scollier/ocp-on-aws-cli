@@ -12,25 +12,11 @@ while [ -z "$SUBNET_ID_4" ]; do
     --output text)
 done
 
-while [ -z "$SUBNET_ID_5" ]; do
-SUBNET_ID_5=$(aws ec2 describe-subnets \
-    --query Subnets[].SubnetId[] \
-    --filters Name=cidr,Values=$SUBNET_CIDR_5 \
-    --output text)
-done
-
 # Get instances to add to load balancer
 while [ -z "$INSTANCE_ID_1" ]; do
     INSTANCE_ID_1=$(aws ec2 describe-instances \
     --query 'Reservations[].Instances[].[InstanceId]' \
-    --filters "Name=instance-state-name,Values=running" "Name=tag:Name,Values=${UNIQ_VAR}-node00.*" \
-    --output text)
-done
-
-while [ -z "$INSTANCE_ID_2" ]; do
-    INSTANCE_ID_2=$(aws ec2 describe-instances \
-    --query 'Reservations[].Instances[].[InstanceId]' \
-    --filters "Name=instance-state-name,Values=running" "Name=tag:Name,Values=${UNIQ_VAR}-node01.*" \
+    --filters "Name=instance-state-name,Values=running" "Name=tag:Name,Values=${UNIQ_VAR}-app-node00.*" \
     --output text)
 done
 
@@ -38,7 +24,7 @@ done
 aws elb create-load-balancer \
 --load-balancer-name $ROUTER_LB_NAME \
 --listeners "Protocol=TCP,LoadBalancerPort=80,InstancePort=80" \
---subnets "$SUBNET_ID_4" "$SUBNET_ID_5"
+--subnets "$SUBNET_ID_4" 
 
 # Add load balancer to security group
 while [ -z "$ROUTER_ELB_SEC_GRP_ID" ]; do
@@ -60,7 +46,7 @@ aws elb configure-health-check \
 # add nodes to load balancer
 aws elb register-instances-with-load-balancer \
 --load-balancer-name $ROUTER_LB_NAME \
---instances $INSTANCE_ID_1 $INSTANCE_ID_2 $INSTANCE_ID_3
+--instances $INSTANCE_ID_1 
 
 # Enable cross AZ Load Balancing
 aws elb modify-load-balancer-attributes --load-balancer-name \

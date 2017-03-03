@@ -4,12 +4,12 @@
     {
       "Action": "DELETE",
       "ResourceRecordSet": {
-        "Name": "ci-master00.ci.sysdeseng.com",
+        "Name": "scollier-master00.scollier-aws.sysdeseng.com",
         "Type": "A",
         "TTL": 60,
         "ResourceRecords": [
           {
-            "Value": "10.20.1.117"
+            "Value": "10.20.1.46"
           }
         ]
       }

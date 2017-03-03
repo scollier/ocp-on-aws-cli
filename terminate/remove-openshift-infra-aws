@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Source Variables
-source ../vars &> /dev/null
+pushd /home/scollier/git_projects/ocp-on-aws-cli
+source ./vars
+popd
 
 DELETE_KEYS() {
 ##
@@ -275,11 +277,11 @@ echo "deleted IAM roles"
 }
 
 # Call functions
-#DELETE_IAM_ROLES
+DELETE_IAM_ROLES
 CLEAN_IAM
-DELETE_INSTANCES
-DELETE_KEYS
-DELETE_LB
-DELETE_SEC_GRPS
-DELETE_DNS
-DELETE_VPC
+# DELETE_INSTANCES
+# DELETE_KEYS
+# DELETE_LB
+# DELETE_SEC_GRPS
+# DELETE_DNS
+# DELETE_VPC

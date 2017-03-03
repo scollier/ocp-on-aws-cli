@@ -1,5 +1,5 @@
 # Create Custom Variables
-UNIQ_VAR="ci"
+UNIQ_VAR="scollier"
 
 # VPC Configuration
 VPC_NAME=${UNIQ_VAR}-vpc
@@ -64,7 +64,7 @@ MASTER_NODE_TAGS=${UNIQ_VAR}-master
 # DNS Entries
 DHCP_OPTS=ec2.internal
 DNS_PTR=20.10.in-addr.arpa.
-INFRA_DNS=ci.sysdeseng.com
+INFRA_DNS=scollier-aws.sysdeseng.com
 MASTER_ELB_CNAME=${UNIQ_VAR}-openshift-master.${INFRA_DNS}
 
 # Master and node names
@@ -89,4 +89,4 @@ ROUTER_LB_NAME=${UNIQ_VAR}-ose-router
 OPENSHIFT_MASTER_CLUSTER_HOSTNAME=${UNIQ_VAR}-openshift-master.${INFRA_DNS}
 
 # AWS Key
-KEY_NAME=ci
+KEY_NAME=aws-certification
